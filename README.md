@@ -1,4 +1,4 @@
-devhub-handbook
+handbook
 ===============
 
 WordPress Handbook plugin for DevHub
