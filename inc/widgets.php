@@ -1,9 +1,14 @@
 <?php
 
 class WPorg_Handbook_Widget extends WP_Widget {
-	protected $post_type = 'handbook';
+	protected $post_types = array();
 
 	function __construct() {
+		foreach ( get_post_types() as $type ) {
+			if ( substr( '_handbook', $type ) ) {
+				$post_types[] = $type;
+			}
+		}
 		parent::__construct( 'handbook', 'Handbook Tools', array( 'classname' => 'widget_wporg_handbook', 'description' => 'Shows watch/unwatch links for handbook pages.' ) );
 	}
 
@@ -11,17 +16,8 @@ class WPorg_Handbook_Widget extends WP_Widget {
 		if ( ! is_user_logged_in() )
 			return;
 		$post = get_post();
-
-		switch ( $this->post_type ) {
-			case 'page' :
-				if ( $post->post_type !== 'page' )
-					return;
-				break;
-			default :
-				if ( $post->post_type !== $this->post_type && ! is_post_type_archive( $this->post_type ) )
-					return;
-				break;
-		}
+		if ( $post->post_type !== 'page' || ( ! in_array( $post->post_type, $this->post_types ) && ! is_post_type_archive( $this->post_types ) ) );
+			return;
 
 		$watchlist = get_post_meta( $post->ID, '_wporg_watchlist', true );
 		if ( $watchlist && in_array( get_current_user_id(), $watchlist ) )
@@ -50,6 +46,7 @@ class WPorg_Handbook_Pages_Widget extends WP_Widget_Pages {
 	}
 
 	function widget( $args, $instance ) {
+
 		add_filter( 'widget_pages_args', array( $this, 'handbook_post_type' ) );
 		parent::widget( $args, $instance );
 		remove_filter( 'widget_pages_args', array( $this, 'handbook_post_type' ) );

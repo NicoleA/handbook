@@ -5,11 +5,12 @@
  * @author Automattic, modifed by Nacin
  */
 class WPorg_Handbook_TOC {
-	protected $post_type = 'handbook';
+	protected $post_type = '';
 
 	protected $styles = '<style> .toc-jump { text-align: right; font-size: 12px; } .page .toc-heading { margin-top: -50px; padding-top: 50px !important; }</style>';
 
-	function __construct() {
+	function __construct( $post_type ) {
+		$this->post_type = $post_type;
 		add_action( 'template_redirect', array( $this, 'load_filters' ) );
 	}
 
