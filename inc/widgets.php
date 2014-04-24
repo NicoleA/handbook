@@ -13,7 +13,7 @@ class WPorg_Handbook_Widget extends WP_Widget {
 		parent::__construct( 'handbook', 'Handbook Tools', array( 'classname' => 'widget_wporg_handbook', 'description' => 'Shows watch/unwatch links for handbook pages.' ) );
 	}
 
-	function widet() {
+	function widget() {
 		if ( ! is_user_logged_in() )
 			return;
 
