@@ -57,7 +57,7 @@ class WPorg_Handbook {
 	}
 
 	function __construct( $type ) {
-		$this->post_type = $type . '_handbook';
+		$this->post_type = $type . '-handbook';
 		$this->label = ucwords( $type );
 		add_filter( 'user_has_cap', array( $this, 'grant_handbook_caps' ) );
 		add_filter( 'init', array( $this, 'register_post_type' ) );
