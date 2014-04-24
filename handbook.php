@@ -86,8 +86,9 @@ class WPorg_Handbook {
 		register_post_type( $this->post_type, array(
 			'labels' => array(
 				'name' => "{$this->label} Pages",
-				'singular_name' => "{$this->label} Pages",
-				'menu_name' => $this->label,
+				'singular_name' => "{$this->label} Page",
+				'menu_name' => "{$this->label} Handbook",
+				'all_items' => "{$this->label} Pages",
 			),
 			'public' => true,
 			'show_ui' => true,
