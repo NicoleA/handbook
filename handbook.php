@@ -104,7 +104,7 @@ class WPorg_Handbook {
 
 	function admin_page_access_denied() {
 		if ( ! current_user_can( 'read' ) ) {
-			wp_redirect( admin_url( 'edit.php?post_type=handbook' ) );
+			wp_redirect( admin_url( "edit.php?post_type={$this->post_type}" ) );
 			exit;
 		}
 	}
@@ -116,8 +116,8 @@ class WPorg_Handbook {
 	}
 
 	function pre_get_posts( $query ) {
-		if ( $query->is_main_query() && ! $query->is_admin && $query->is_post_type_archive( 'handbook' ) ) {
-			$query->set( 'handbook', 'handbook' );
+		if ( $query->is_main_query() && ! $query->is_admin && $query->is_post_type_archive( $this->post_type ) ) {
+			$query->set( 'handbook', $this->post_type );
 		}
 	}
 

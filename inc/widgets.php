@@ -32,7 +32,7 @@ class WPorg_Handbook_Widget extends WP_Widget {
 	}
 
 	function append_suffix( $t ) {
-		return $t . '_handbook';
+		return $t . '-handbook';
 	}
 }
 
