@@ -9,12 +9,34 @@ require_once dirname( __FILE__ ) . '/inc/glossary.php';
 require_once dirname( __FILE__ ) . '/inc/table-of-contents.php';
 require_once dirname( __FILE__ ) . '/inc/email-post-changes.php';
 
-WPorg_Handbook_Glossary::init();
-new WPorg_Handbook_TOC;
+//WPorg_Handbook_Glossary::init();
+
+/**
+ * Initialize our handbooks
+ *
+ */
+class WPorg_Handbook_Init {
+
+	static function init() {
+
+		$post_types = 'wp';
+
+		$post_types = apply_filters( 'handbook_post_types', $post_types );
+
+		if ( ! is_array( $post_types ) ) {
+			$post_types = (array) $post_types;
+		}
+		foreach ( $post_types as $type ) {
+			new WPorg_Handbook( $type );
+			new WPorg_Handbook_TOC( $type );
+		}
+	}
+}
+add_action( 'after_setup_theme', array( 'WPorg_Handbook_Init', 'init' ) );
 
 class WPorg_Handbook {
 
-	protected $post_type = '';
+	public $post_type = '';
 
 	protected $label = '';
 
@@ -34,9 +56,9 @@ class WPorg_Handbook {
 		);
 	}
 
-	function __construct( $post_type ) {
-		$this->post_type = $post_type . '_handbook';
-		$this->label = ucwords( str_replace( array( '-', '_' ), ' ', $this->post_type ) );
+	function __construct( $type ) {
+		$this->post_type = $type . '_handbook';
+		$this->label = ucwords( $type );
 		add_filter( 'user_has_cap', array( $this, 'grant_handbook_caps' ) );
 		add_filter( 'init', array( $this, 'register_post_type' ) );
 		add_action( 'admin_page_access_denied', array( $this, 'admin_page_access_denied' ) );
@@ -100,11 +122,7 @@ class WPorg_Handbook {
 	}
 
 	function handbook_sidebar() {
-		if ( ! class_exists( 'P2' ) )
-			return;
-
 		register_sidebar( array( 'id' => $this->post_type, 'name' => $this->label, 'description' => "Used on {$this->label} pages" ) );
-
 		require_once dirname( __FILE__ ) . '/inc/widgets.php';
 		register_widget( "WPorg_Handbook_Pages_Widget" );
 	}
@@ -115,6 +133,3 @@ class WPorg_Handbook {
 		return $post_types;
 	}
 }
-
-$plugin_handbook = new WPorg_Handbook( 'plugin' );
-$theme_handbook = new WPorg_Handbook( 'theme' );
