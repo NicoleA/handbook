@@ -19,7 +19,7 @@ class WPorg_Handbook_Init {
 
 	static function init() {
 
-		$post_types = 'wp';
+		$post_types = 'handbook';
 
 		$post_types = apply_filters( 'handbook_post_types', $post_types );
 
@@ -57,8 +57,9 @@ class WPorg_Handbook {
 	}
 
 	function __construct( $type ) {
+			if ( 'handbook' != $type )
 		$this->post_type = $type . '-handbook';
-		$this->label = ucwords( $type );
+		$this->label = ucwords( str_replace( array( '-', '_' ), ' ', $this->post_type ) );
 		add_filter( 'user_has_cap', array( $this, 'grant_handbook_caps' ) );
 		add_filter( 'init', array( $this, 'register_post_type' ) );
 		add_action( 'admin_page_access_denied', array( $this, 'admin_page_access_denied' ) );
@@ -87,7 +88,7 @@ class WPorg_Handbook {
 			'labels' => array(
 				'name' => "{$this->label} Pages",
 				'singular_name' => "{$this->label} Page",
-				'menu_name' => "{$this->label} Handbook",
+				'menu_name' => "{$this->label}",
 				'all_items' => "{$this->label} Pages",
 			),
 			'public' => true,

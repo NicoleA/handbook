@@ -2,7 +2,7 @@
 
 class WPorg_Handbook_Widget extends WP_Widget {
 
-	protected $post_types = 'wp';
+	protected $post_types = 'handbook';
 
 	function __construct() {
 		$this->post_types = apply_filters( 'handbook_post_types', $this->post_types );
@@ -32,6 +32,9 @@ class WPorg_Handbook_Widget extends WP_Widget {
 	}
 
 	function append_suffix( $t ) {
+		if ( 'handbook' == $t )
+			return $t;
+
 		return $t . '-handbook';
 	}
 }
@@ -47,7 +50,7 @@ class WPorg_Handbook_Widget_for_Pages extends WPorg_Handbook_Widget {
 
 class WPorg_Handbook_Pages_Widget extends WP_Widget_Pages {
 
-	protected $post_types = 'wp';
+	protected $post_types = 'handbook';
 
 	function __construct() {
 		$widget_ops = array('classname' => 'widget_wporg_handbook_pages', 'description' => __( 'Your site&#8217;s Handbook Pages') );
@@ -76,6 +79,9 @@ class WPorg_Handbook_Pages_Widget extends WP_Widget_Pages {
 	}
 
 	function append_suffix( $t ) {
+		if ( 'handbook' == $t )
+			return $t;
+
 		return $t . '-handbook';
 	}
 }
