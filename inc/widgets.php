@@ -18,17 +18,19 @@ class WPorg_Handbook_Widget extends WP_Widget {
 			return;
 
 		$post = get_post();
-		if ( $post->post_type !== 'page' || ( ! in_array( $post->post_type, $this->post_types ) && ! is_post_type_archive( $this->post_types ) ) );
-			return;
-
-		$watchlist = get_post_meta( $post->ID, '_wporg_watchlist', true );
-		if ( $watchlist && in_array( get_current_user_id(), $watchlist ) ) {
-			printf( '<p>You are watching this page. <a href="%s">Unwatch</a></p>',
-			wp_nonce_url( admin_url( 'admin-post.php?action=wporg_watchlist&post_id=' . $post->ID ), 'unwatch-' . $post->ID ) );
+		if ( $post->post_type == 'page' || ( in_array( $post->post_type, $this->post_types ) && ! is_post_type_archive( $this->post_types ) ) ) {
+			$watchlist = get_post_meta( $post->ID, '_wporg_watchlist', true );
+			if ( $watchlist && in_array( get_current_user_id(), $watchlist ) ) {
+				printf( '<p>You are watching this page. <a href="%s">Unwatch</a></p>',
+				wp_nonce_url( admin_url( 'admin-post.php?action=wporg_watchlist&post_id=' . $post->ID ), 'unwatch-' . $post->ID ) );
+			} else {
+				printf( '<p><a href="%s">Watch this page</a></p>',
+				wp_nonce_url( admin_url( 'admin-post.php?action=wporg_watchlist&watch=1&post_id=' . $post->ID ), 'watch-' . $post->ID ) );
+			}
 		} else {
-			printf( '<p><a href="%s">Watch this page</a></p>',
-			wp_nonce_url( admin_url( 'admin-post.php?action=wporg_watchlist&watch=1&post_id=' . $post->ID ), 'watch-' . $post->ID ) );
+			return;
 		}
+
 	}
 
 	function append_suffix( $t ) {
