@@ -8,7 +8,7 @@
 require_once dirname( __FILE__ ) . '/inc/table-of-contents.php';
 require_once dirname( __FILE__ ) . '/inc/email-post-changes.php';
 
-new WPorg_Handbook_TOC( 'page' );
+new WPorg_Handbook_TOC( array( 'page' ) );
 
 add_action( 'widgets_init', 'wporg_handbook_functionality_for_pages_widget', 12 );
 function wporg_handbook_functionality_for_pages_widget() {

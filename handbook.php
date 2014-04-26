@@ -26,9 +26,12 @@ class WPorg_Handbook_Init {
 		if ( ! is_array( $post_types ) ) {
 			$post_types = (array) $post_types;
 		}
+
+		new WPorg_Handbook_TOC( $post_types );
+
 		foreach ( $post_types as $type ) {
 			new WPorg_Handbook( $type );
-			new WPorg_Handbook_TOC( $type );
+
 		}
 	}
 }
@@ -57,8 +60,9 @@ class WPorg_Handbook {
 	}
 
 	function __construct( $type ) {
-			if ( 'handbook' != $type )
-		$this->post_type = $type . '-handbook';
+		if ( 'handbook' != $type )
+			$this->post_type = $type . '-handbook';
+
 		$this->label = ucwords( str_replace( array( '-', '_' ), ' ', $this->post_type ) );
 		add_filter( 'user_has_cap', array( $this, 'grant_handbook_caps' ) );
 		add_filter( 'init', array( $this, 'register_post_type' ) );
@@ -84,6 +88,11 @@ class WPorg_Handbook {
 	}
 
 	function register_post_type() {
+		if ( 'handbook' != $this->post_type ) {
+			$slug = 'handbook/' . substr( $this->post_type, 0, -9 );
+		} else {
+			$slug = 'handbook';
+		}
 		register_post_type( $this->post_type, array(
 			'labels' => array(
 				'name' => "{$this->label} Pages",
@@ -98,7 +107,11 @@ class WPorg_Handbook {
 			'has_archive' => true,
 			'hierarchical' => true,
 			'menu_position' => 11,
-			'rewrite' => true,
+			'rewrite'     => array(
+				'feeds'      => false,
+				'slug'       => $slug,
+				'with_front' => false,
+			),
 			'delete_with_user' => false,
 			'supports' => array( 'title', 'editor', 'author', 'thumbnail', 'page-attributes', 'custom-fields', 'comments', 'revisions' ),
 		) );
