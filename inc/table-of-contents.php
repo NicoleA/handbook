@@ -5,17 +5,27 @@
  * @author Automattic, modifed by Nacin
  */
 class WPorg_Handbook_TOC {
-	protected $post_type = 'handbook';
+	protected $post_types = array();
 
 	protected $styles = '<style> .toc-jump { text-align: right; font-size: 12px; } .page .toc-heading { margin-top: -50px; padding-top: 50px !important; }</style>';
 
-	function __construct() {
+	function __construct( $post_types ) {
+		$this->post_types = $post_types;
 		add_action( 'template_redirect', array( $this, 'load_filters' ) );
 	}
 
 	function load_filters() {
-		if ( is_singular( $this->post_type ) )
+		$this->post_types = array_map( array( $this, 'append_suffix' ), $this->post_types );
+
+		if ( is_singular( $this->post_types ) )
 			add_filter( 'the_content', array( $this, 'add_toc' ) );
+	}
+
+	function append_suffix( $t ) {
+		if ( 'handbook' == $t )
+			return $t;
+
+		return $t . '-handbook';
 	}
 
 	function add_toc( $content ) {
